@@ -10,16 +10,15 @@ SCK_PIN = 6  # HX711 SCK
 KNOWN_WEIGHT = 500  # Set this to a known weight in grams (e.g., 500g)
 
 # HX711 setup
-hx = HX711(DT_PIN, SCK_PIN)
 
 # Set the number of readings you want to average
 READINGS = 10
 
-def setup():
+def setup(hx):
     hx.reset()
     hx.tare()  # Tare the scale
 
-def calibrate():
+def calibrate(hx):
     # Get the raw data for the known weight
     print(f"Place {KNOWN_WEIGHT}g on the scale.")
     input("Press Enter when ready...")
@@ -37,7 +36,8 @@ def calibrate():
     return reference_unit
 
 def main():
-    setup()
+    hx = HX711(DT_PIN, SCK_PIN)
+    setup(hx)
     
     # Find the reference_unit for the known weight
     reference_unit = calibrate()
