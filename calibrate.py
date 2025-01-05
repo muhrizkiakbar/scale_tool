@@ -44,7 +44,7 @@ def calibrate(hx):
 
 while True:
     try:
-    setup(hx)
+        setup(hx)
     
         # Find the reference_unit for the known weight
         reference_unit = calibrate(hx)
