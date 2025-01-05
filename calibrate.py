@@ -13,7 +13,7 @@ KNOWN_WEIGHT = 200  # Set this to a known weight in grams (e.g., 500g)
 
 # Set the number of readings you want to average
 READINGS = 10
-hx = HX711(DT_PIN, SCK_PIN)
+hx = HX711(5,6)
 
 hx.reset()
 hx.tare()  # Tare the scale
