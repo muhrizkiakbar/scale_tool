@@ -38,7 +38,8 @@ In my case, the longValueWithOffset was around 114000 so my reference unit is 11
 because if I used the 114000, I'd be getting milligrams instead of grams.
 '''
 
-referenceUnit = 114
+hx.setReferenceUnit(-230)
+hx.setOffset(211427);
 # hx.set_reference_unit(referenceUnit)
 
 hx.reset()
