@@ -10,36 +10,9 @@ def cleanAndExit():
     sys.exit()
 
 hx = HX711(5, 6)
-
-'''
-I've found out that, for some reason, the order of the bytes is not always the same between versions of python,
-and the hx711 itself. I still need to figure out why.
-
-If you're experiencing super random values, change these values to MSB or LSB until you get more stable values.
-There is some code below to debug and log the order of the bits and the bytes.
-
-The first parameter is the order in which the bytes are used to build the "long" value. The second paramter is
-the order of the bits inside each byte. According to the HX711 Datasheet, the second parameter is MSB so you
-shouldn't need to modify it.
-'''
 hx.set_reading_format("MSB", "MSB")
-
-'''
-# HOW TO CALCULATE THE REFFERENCE UNIT
-1. Set the reference unit to 1 and make sure the offset value is set.
-2. Load you sensor with 1kg or with anything you know exactly how much it weights.
-3. Write down the 'long' value you're getting. Make sure you're getting somewhat consistent values.
-    - This values might be in the order of millions, varying by hundreds or thousands and it's ok.
-4. To get the wright in grams, calculate the reference unit using the following formula:
-        
-    referenceUnit = longValueWithOffset / 1000
-        
-In my case, the longValueWithOffset was around 114000 so my reference unit is 114,
-because if I used the 114000, I'd be getting milligrams instead of grams.
-'''
-
-hx.setReferenceUnit(-230)
-hx.setOffset(211427);
+hx.set_reference_unit(-230)
+hx.set_offset(211427);
 # hx.set_reference_unit(referenceUnit)
 
 hx.reset()
