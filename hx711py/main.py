@@ -1,5 +1,5 @@
 import time
-# from machine import Pin, I2C
+from machine import Pin, I2C
 # from pico_i2c_lcd import I2cLcd  # Import your I2C LCD class
 from hx711 import HX711  # Import your HX711 class
 
