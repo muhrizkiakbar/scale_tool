@@ -1,15 +1,29 @@
-from luma.led_matrix.device import max7219
-from luma.core.interface.serial import spi
-from luma.core.virtual import matrix
 import time
+import board
+import busio
+from adafruit_ssd1306 import SSD1306_I2C
+from PIL import Image, ImageDraw, ImageFont
 
-# Initialize SPI
-serial = spi(port=0, device=0, gpio=None)
-device = max7219(serial, cascaded=4, block_orientation=90, rotate=0)
-device.contrast(16)
+# I2C setup
+i2c = busio.I2C(board.SCL, board.SDA)
+oled = SSD1306_I2C(128, 64, i2c)  # Adjust for your OLED resolution (e.g., 128x32)
 
-# Display some text
-virtual = matrix(device)
-virtual.text = "HELLO"
+# Clear the display
+oled.fill(0)
+oled.show()
+
+# Create blank image for drawing
+image = Image.new("1", (oled.width, oled.height))
+draw = ImageDraw.Draw(image)
+
+# Draw text
+font = ImageFont.load_default()
+draw.text((0, 0), "Hello, OLED!", font=font, fill=255)
+
+# Display image
+oled.image(image)
+oled.show()
+
+# Wait
 time.sleep(5)
 
