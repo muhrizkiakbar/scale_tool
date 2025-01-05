@@ -46,19 +46,19 @@ while True:
     try:
     setup(hx)
     
-    # Find the reference_unit for the known weight
-    reference_unit = calibrate(hx)
-    
-    # Set the reference_unit
-    hx.set_reference_unit(reference_unit)
-    
-    print(f"Set reference_unit to: {reference_unit}")
-    
-    # Now you can start using the scale
-    while True:
-        weight = hx.get_weight(10) / reference_unit
-        print(f"Weight: {weight:.2f} grams")
-        time.sleep(0.5)
+        # Find the reference_unit for the known weight
+        reference_unit = calibrate(hx)
+        
+        # Set the reference_unit
+        hx.set_reference_unit(reference_unit)
+        
+        print(f"Set reference_unit to: {reference_unit}")
+        
+        # Now you can start using the scale
+        while True:
+            weight = hx.get_weight(10) / reference_unit
+            print(f"Weight: {weight:.2f} grams")
+            time.sleep(0.5)
 
     except (KeyboardInterrupt, SystemExit):
         cleanAndExit()
