@@ -1,61 +1,68 @@
 import time
-import RPi.GPIO as GPIO
-from hx711 import HX711
-import sys
+from hx711 import HX711  # Import your HX711 class
 
-# Pin setup
-DT_PIN = 5  # HX711 DT
-SCK_PIN = 6  # HX711 SCK
 
-# Known weight for calibration (in grams)
-KNOWN_WEIGHT = 200  # Set this to a known weight in grams (e.g., 500g)
-READINGS = 10
+# Set up HX711
+hx711 = HX711(5,6, gain=128)  # Adjust pins for HX711
 
-# HX711 setup
-hx = HX711(DT_PIN, SCK_PIN)
-hx.set_reading_format("MSB", "MSB")
+# Tare the scale initially
+hx711.tare()
 
-# Set the number of readings you want to average
+# Set up button for zeroing the scale
+zero_button = 17  # Change GPIO 15 to your chosen pin
 
-# Initial tare
-hx.reset()
-hx.tare()
+# Function to read average raw value
+def read_average(times=10):
+    total = 0
+    for _ in range(times):
+        total += hx711.get_value()
+    return total // times
 
-def cleanAndExit():
-    print("Cleaning...")
-    GPIO.cleanup()
-    print("Bye!")
-    sys.exit()
+# Function to calibrate the scale
+def calibrate(load_cell_weight):
+    print("Taring the scale...")
+    hx711.tare()  # Tare the scale
+    time.sleep(2)
 
+    print("Place known weight on the scale.")
+    time.sleep(4)
+
+    print("Reading raw value for the known weight...")
+    raw_value = read_average(10)  # Read raw value several times to get an average
+    print(f"Raw Value with known weight: {raw_value}")
+
+    # Calculate scale factor
+    scale_factor = raw_value / load_cell_weight
+    print(f"Scale Factor: {scale_factor}")
+
+    return scale_factor
+
+# Known weight for calibration
+known_weight = 200  # Adjust to the weight you will use to calibrate (grams)
+
+# Start calibration
+scale_factor = calibrate(known_weight)
+
+# Zero button debounce function
+def is_button_pressed():
+    time.sleep(0.05)  # Debounce delay
+    return not zero_button.value()  # Button pressed when value is LOW
+
+# Main loop
 while True:
-    try:
-        # Find the reference_unit for the known weight
-        # Get the raw data for the known weight
-        # Get the raw data for the known weight
-        print(f"Place {KNOWN_WEIGHT}g on the scale.")
-        input("Press Enter when ready...")
-        
-        # Read raw data multiple times and average
-        raw_data = [hx.get_raw_data() for _ in range(READINGS)]
-        average_raw_value = sum(raw_data) / len(raw_data)
-        
-        print(f"Raw Value for {KNOWN_WEIGHT}g: {average_raw_value}")
-        
-        # Calculate the calibration factor (reference_unit)
-        reference_unit = average_raw_value / KNOWN_WEIGHT
-        print(f"Calculated reference_unit: {reference_unit}")
+    if is_button_pressed():  # Check if the button is pressed
+        # lcd.clear()
+        # lcd.putstr("Zeroing scale...")
+        hx711.tare()  # Zero (tare) the scale
+        time.sleep(1)  # Give time for taring
+        # lcd.clear()
     
-        # Set the reference_unit
-        hx.set_reference_unit(reference_unit)
-        
-        print(f"Set reference_unit to: {reference_unit}")
-        
-        # Now you can start using the scale
-        while True:
-            weight = hx.get_weight(10) / reference_unit
-            print(f"Weight: {weight:.2f} grams")
-            time.sleep(0.5)
+    # Read weight and display
+    weight_raw = hx711.get_value()
+    weight_grams = weight_raw / scale_factor
+    weight_grams_int = int(weight_grams)
 
-    except (KeyboardInterrupt, SystemExit):
-        cleanAndExit()
-
+    print(f"Weight: {weight_grams_int}")
+    # lcd.clear()
+    # lcd.putstr(f"Weight: {weight_grams_int} g")
+    time.sleep(1)
