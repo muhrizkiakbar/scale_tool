@@ -10,6 +10,10 @@ GPIO.setup(zero_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Set up as input wi
 # Set up HX711
 hx711 = HX711(5,6, gain=128)  # Adjust pins for HX711
 scale_factor = 10997.515
+hx711.tare()
+time.sleep(2)
+print("Place known weight on the scale.")
+time.sleep(4)
 
 def cleanAndExit():
     print("Cleaning...")
