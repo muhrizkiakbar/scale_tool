@@ -15,15 +15,14 @@ KNOWN_WEIGHT = 200  # Set this to a known weight in grams (e.g., 500g)
 READINGS = 10
 hx = HX711(DT_PIN, SCK_PIN)
 
+hx.reset()
+hx.tare()  # Tare the scale
+
 def cleanAndExit():
     print("Cleaning...")
         
     print("Bye!")
     sys.exit()
-
-def setup(hx):
-    hx.reset()
-    hx.tare()  # Tare the scale
 
 def calibrate(hx):
     # Get the raw data for the known weight
