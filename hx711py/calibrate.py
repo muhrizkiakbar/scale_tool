@@ -55,9 +55,10 @@ while True:
     if is_button_pressed():  # Check if the button is pressed
         print("Zeroing scale...")
         time.sleep(3)  # Give time for taring
-        hx711.tare()  # Zero (tare) the scale
         print("Place known weight on the scale.")
         time.sleep(4)
+        hx711.tare()  # Zero (tare) the scale
+        time.sleep(1)  # Give time for taring
 
     # Read weight and display
     weight_raw = hx711.get_value()
