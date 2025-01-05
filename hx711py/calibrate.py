@@ -75,3 +75,4 @@ except KeyboardInterrupt:
 finally:
     GPIO.cleanup()
 
+# RESULT CALIBRATION SCALE FACTOR = 10997.515

@@ -9,8 +9,7 @@ GPIO.setup(zero_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Set up as input wi
 
 # Set up HX711
 hx711 = HX711(5,6, gain=128)  # Adjust pins for HX711
-hx711.set_reference_unit(-6459)
-hx711.set_offset(2971992)
+scale_factor = 10997.515
 
 def cleanAndExit():
     print("Cleaning...")
