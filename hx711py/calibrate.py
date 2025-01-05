@@ -55,6 +55,7 @@ try:
     while True:
         if is_button_pressed():  # Check if the button is pressed
             print("Zeroing scale...")
+            time.sleep(3)  # Give time for taring
             hx711.tare()  # Zero (tare) the scale
             time.sleep(1)  # Give time for taring
 
@@ -64,8 +65,8 @@ try:
         weight_grams_int = int(weight_grams)
 
         print(f"Weight: {weight_grams_int}")
-        time.sleep(1)
+            time.sleep(1)
 
-except KeyboardInterrupt:
-    GPIO.cleanup()  # Clean up GPIO when the program is stopped
+    except KeyboardInterrupt:
+        GPIO.cleanup()  # Clean up GPIO when the program is stopped
 
