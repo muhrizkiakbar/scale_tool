@@ -7,7 +7,7 @@ DT_PIN = 5  # HX711 DT
 SCK_PIN = 6  # HX711 SCK
 
 # Known weight for calibration (in grams)
-KNOWN_WEIGHT = 500  # Set this to a known weight in grams (e.g., 500g)
+KNOWN_WEIGHT = 200  # Set this to a known weight in grams (e.g., 500g)
 
 # HX711 setup
 
