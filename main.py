@@ -11,13 +11,14 @@ GPIO.setmode(GPIO.BCM)
 hx711 = HX711(DT_PIN, SCK_PIN)
 
 # Function to read the raw data from the HX711
-def read_weight():
-    try:
-        weight = hx711.get_weight_mean(20)  # Average 20 readings
-        print("Raw weight:", weight)
-        return weight
-    except (KeyboardInterrupt, SystemExit):
-        GPIO.cleanup()
+def read_weight(num_samples=10):
+    weights = []
+    for _ in range(num_samples):
+        weight = hx711.get_weight(5)  # Take a single reading with 5 readings averaged internally
+        weights.append(weight)
+        time.sleep(0.1)
+    # Return the average weight
+    return sum(weights) / len(weights)
 
 # Calibration function
 def calibrate():
@@ -28,7 +29,7 @@ def calibrate():
     # Take several measurements and find the mean
     measurements = []
     for i in range(10):
-        weight = hx711.get_weight_mean(10)
+        weight = hx711.get_weight(5)  # Average 5 readings
         measurements.append(weight)
         time.sleep(0.1)
 
@@ -50,6 +51,10 @@ def calibrate():
 
 # Main program
 if __name__ == "__main__":
+    # Tare the scale (set zero)
+    hx711.tare()
+    print("Taring complete. Now calibrate the scale.")
+    
     # Calibrate the scale
     calibrate()
     
