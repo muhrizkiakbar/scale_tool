@@ -1,10 +1,12 @@
 import RPi.GPIO as GPIO
 from time import sleep
-from hx711 import HX711
 from adafruit_ssd1306 import SSD1306_I2C
 from luma.led_matrix.device import max7219
 from luma.core.interface.serial import spi, noop
 from luma.core.render import canvas
+import sys
+sys.path.append("./hx711py")
+from hx711 import HX711
 
 # Pin configuration
 DT = 5
