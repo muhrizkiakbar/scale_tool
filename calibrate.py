@@ -13,6 +13,13 @@ KNOWN_WEIGHT = 200  # Set this to a known weight in grams (e.g., 500g)
 
 # Set the number of readings you want to average
 READINGS = 10
+hx = HX711(DT_PIN, SCK_PIN)
+
+def cleanAndExit():
+    print("Cleaning...")
+        
+    print("Bye!")
+    sys.exit()
 
 def setup(hx):
     hx.reset()
@@ -35,12 +42,12 @@ def calibrate(hx):
     
     return reference_unit
 
-def main():
-    hx = HX711(DT_PIN, SCK_PIN)
+while True:
+    try:
     setup(hx)
     
     # Find the reference_unit for the known weight
-    reference_unit = calibrate()
+    reference_unit = calibrate(hx)
     
     # Set the reference_unit
     hx.set_reference_unit(reference_unit)
@@ -53,6 +60,6 @@ def main():
         print(f"Weight: {weight:.2f} grams")
         time.sleep(0.5)
 
-if __name__ == "__main__":
-    main()
+    except (KeyboardInterrupt, SystemExit):
+        cleanAndExit()
 
