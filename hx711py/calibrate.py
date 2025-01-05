@@ -35,7 +35,7 @@ while True:
         input("Press Enter when ready...")
         
         # Read raw data multiple times and average
-        raw_data = [hx.get_raw_data_mean(READINGS) for _ in range(READINGS)]
+        raw_data = [hx.get_raw_data(READINGS) for _ in range(READINGS)]
         average_raw_value = sum(raw_data) / len(raw_data)
         
         print(f"Raw Value for {KNOWN_WEIGHT}g: {average_raw_value}")
