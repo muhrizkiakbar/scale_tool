@@ -10,7 +10,7 @@ SCK_PIN = 6  # HX711 SCK
 KNOWN_WEIGHT = 500  # Set this to a known weight in grams (e.g., 500g)
 
 # HX711 setup
-hx = HX711(DOUT_PIN=DT_PIN, PD_SCK=SCK_PIN)
+hx = HX711(DT_PIN, SCK_PIN)
 
 # Set the number of readings you want to average
 READINGS = 10
