@@ -2,13 +2,12 @@ import time
 import RPi.GPIO as GPIO
 from hx711 import HX711  # Import your HX711 class
 
-# Set up GPIO
 GPIO.setmode(GPIO.BCM)  # Use BCM numbering
 zero_button = 17  # Change GPIO pin if needed
 GPIO.setup(zero_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Set up as input with pull-up resistor
 
 # Set up HX711
-hx711 = HX711(5, 6, gain=128)  # Adjust pins for HX711
+hx711 = HX711(5,6, gain=128)  # Adjust pins for HX711
 
 # Tare the scale initially
 hx711.tare()
@@ -47,23 +46,25 @@ scale_factor = calibrate(known_weight)
 
 # Zero button debounce function
 def is_button_pressed():
+    # time.sleep(0.05)  # Debounce delay
+    # return not zero_button.value()  # Button pressed when value is LOW
     time.sleep(0.05)  # Debounce delay
     return GPIO.input(zero_button) == GPIO.LOW  # Button pressed when value is LOW
 
 # Main loop
 while True:
     if is_button_pressed():  # Check if the button is pressed
-        print("Zeroing scale...")
-        time.sleep(3)  # Give time for taring
-        print("Place known weight on the scale.")
-        time.sleep(4)
+        # lcd.clear()
+        # lcd.putstr("Zeroing scale...")
         hx711.tare()  # Zero (tare) the scale
         time.sleep(1)  # Give time for taring
-
-    # Read weight and display
+        # lcd.clear()
+    
     weight_raw = hx711.get_value()
     weight_grams = weight_raw / scale_factor
     weight_grams_int = int(weight_grams)
 
     print(f"Weight: {weight_grams_int}")
+    # lcd.clear()
+    # lcd.putstr(f"Weight: {weight_grams_int} g")
     time.sleep(1)
