@@ -9,12 +9,13 @@ SCK_PIN = 6  # HX711 SCK
 
 # Known weight for calibration (in grams)
 KNOWN_WEIGHT = 200  # Set this to a known weight in grams (e.g., 500g)
+READINGS = 10
 
 # HX711 setup
 hx = HX711(DT_PIN, SCK_PIN)
+hx.set_reading_format("MSB", "MSB")
 
 # Set the number of readings you want to average
-READINGS = 10
 
 # Initial tare
 hx.reset()
