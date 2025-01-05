@@ -32,7 +32,7 @@ def calibrate(load_cell_weight):
     time.sleep(2)
 
     print("Place known weight on the scale.")
-    time.sleep(2)
+    time.sleep(4)
 
     print("Reading raw value for the known weight...")
     raw_value = read_average(10)  # Read raw value several times to get an average
@@ -69,7 +69,7 @@ while True:
     weight_grams = weight_raw / scale_factor
     weight_grams_int = int(weight_grams)
 
-    print(f"Scale Factor: {weight_grams_int}")
+    print(f"Weight: {weight_grams_int}")
     # lcd.clear()
     # lcd.putstr(f"Weight: {weight_grams_int} g")
     time.sleep(1)
