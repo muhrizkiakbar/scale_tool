@@ -1,6 +1,7 @@
 import time
 import RPi.GPIO as GPIO
 from hx711 import HX711
+import sys
 
 # Pin setup
 DT_PIN = 5  # HX711 DT
@@ -10,17 +11,18 @@ SCK_PIN = 6  # HX711 SCK
 KNOWN_WEIGHT = 200  # Set this to a known weight in grams (e.g., 500g)
 
 # HX711 setup
+hx = HX711(DT_PIN, SCK_PIN)
 
 # Set the number of readings you want to average
 READINGS = 10
-hx = HX711(5,6)
 
+# Initial tare
 hx.reset()
-hx.tare()  # Tare the scale
+hx.tare()
 
 def cleanAndExit():
     print("Cleaning...")
-        
+    GPIO.cleanup()
     print("Bye!")
     sys.exit()
 
@@ -30,7 +32,11 @@ def calibrate(hx):
     input("Press Enter when ready...")
     
     # Read raw data multiple times and average
-    raw_data = [hx.get_raw_data_mean(READINGS) for _ in range(READINGS)]
+    raw_data = []
+    for _ in range(READINGS):
+        raw_data.append(hx.get_raw_data())
+        time.sleep(0.1)  # Small delay to avoid overloading the HX711
+
     average_raw_value = sum(raw_data) / len(raw_data)
     
     print(f"Raw Value for {KNOWN_WEIGHT}g: {average_raw_value}")
