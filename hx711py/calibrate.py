@@ -56,7 +56,8 @@ while True:
         print("Zeroing scale...")
         time.sleep(3)  # Give time for taring
         hx711.tare()  # Zero (tare) the scale
-        time.sleep(1)  # Give time for taring
+        print("Place known weight on the scale.")
+        time.sleep(4)
 
     # Read weight and display
     weight_raw = hx711.get_value()
