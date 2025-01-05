@@ -30,8 +30,11 @@ while True:
         # print binary_string + " " + np_arr8_string
         
         # Prints the weight. Comment if you're debbuging the MSB and LSB issue.
-        val = hx711.get_value()
-        print(val)
+        weight_raw = hx711.get_value()
+        weight_grams = weight_raw / scale_factor
+        weight_grams_int = int(weight_grams)
+
+        print(f"Weight: {weight_grams_int}")
 
         # To get weight from both channels (if you have load cells hooked up 
         # to both channel A and B), do something like this
