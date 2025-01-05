@@ -1,7 +1,8 @@
 import time
 import RPi.GPIO as GPIO
 from hx711 import HX711
-from smbus2 import SMBus
+import board
+import busio
 import adafruit_ssd1306
 
 # Pin setup
@@ -10,11 +11,10 @@ SCK_PIN = 6  # HX711 SCK
 TARE_BUTTON_PIN = 17  # GPIO for tare button
 
 # OLED setup
-I2C_BUS = SMBus(1)
-OLED_ADDRESS = 0x3C
+i2c = busio.I2C(board.SCL, board.SDA)
 WIDTH = 128
 HEIGHT = 32
-oled = adafruit_ssd1306.SSD1306_I2C(WIDTH, HEIGHT, I2C_BUS, addr=OLED_ADDRESS)
+oled = adafruit_ssd1306.SSD1306_I2C(WIDTH, HEIGHT, i2c)
 
 # HX711 setup
 hx = HX711(dout_pin=DT_PIN, pd_sck_pin=SCK_PIN)
