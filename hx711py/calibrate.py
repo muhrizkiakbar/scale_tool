@@ -10,6 +10,7 @@ GPIO.setup(zero_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Set up as input wi
 hx711 = HX711(5,6, gain=128)  # Adjust pins for HX711
 
 # Tare the scale initially
+hx711.reset()
 hx711.tare()
 
 # Function to read average raw value
