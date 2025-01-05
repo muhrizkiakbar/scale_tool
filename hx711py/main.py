@@ -1,5 +1,5 @@
 import time
-from machine import Pin, I2C
+# from machine import Pin, I2C
 # from pico_i2c_lcd import I2cLcd  # Import your I2C LCD class
 from hx711 import HX711  # Import your HX711 class
 
@@ -10,13 +10,13 @@ from hx711 import HX711  # Import your HX711 class
 # lcd = I2cLcd(i2c, 0x27, 2, 16)  # Adjust the I2C address and dimensions
 
 # Set up HX711
-hx711 = HX711(clock=Pin(5), data=Pin(6), gain=128)  # Adjust pins for HX711
+hx711 = HX711(5,6, gain=128)  # Adjust pins for HX711
 
 # Tare the scale initially
 hx711.tare()
 
 # Set up button for zeroing the scale
-zero_button = Pin(15, Pin.IN, Pin.PULL_UP)  # Change GPIO 15 to your chosen pin
+# zero_button = Pin(15, Pin.IN, Pin.PULL_UP)  # Change GPIO 15 to your chosen pin
 
 # Function to read average raw value
 def read_average(times=10):
@@ -53,7 +53,7 @@ scale_factor = calibrate(known_weight)
 # Zero button debounce function
 def is_button_pressed():
     time.sleep(0.05)  # Debounce delay
-    return not zero_button.value()  # Button pressed when value is LOW
+    # return not zero_button.value()  # Button pressed when value is LOW
 
 # Main loop
 while True:
@@ -69,6 +69,7 @@ while True:
     weight_grams = weight_raw / scale_factor
     weight_grams_int = int(weight_grams)
 
+    print(f"Scale Factor: {weight_grams_int}")
     # lcd.clear()
     # lcd.putstr(f"Weight: {weight_grams_int} g")
     time.sleep(1)
