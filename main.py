@@ -1,87 +1,61 @@
 import time
 import RPi.GPIO as GPIO
 from hx711 import HX711
-import board
-import busio
-import adafruit_ssd1306
 
-# Pin setup
-DT_PIN = 5  # HX711 DT
-SCK_PIN = 6  # HX711 SCK
-TARE_BUTTON_PIN = 17  # GPIO for tare button
+# Pin configuration for HX711
+DT_PIN = 5
+SCK_PIN = 6
 
-# OLED setup
-i2c = busio.I2C(board.SCL, board.SDA)
-WIDTH = 128
-HEIGHT = 32
-oled = adafruit_ssd1306.SSD1306_I2C(WIDTH, HEIGHT, i2c)
+# Setup GPIO
+GPIO.setmode(GPIO.BCM)
+hx711 = HX711(DT_PIN, SCK_PIN)
 
-# HX711 setup
-hx = HX711(DOUT_PIN=DT_PIN, PD_SCK=SCK_PIN)
+# Function to read the raw data from the HX711
+def read_weight():
+    try:
+        weight = hx711.get_weight_mean(20)  # Average 20 readings
+        print("Raw weight:", weight)
+        return weight
+    except (KeyboardInterrupt, SystemExit):
+        GPIO.cleanup()
 
-# Global variables
-tare_offset = 0
-CALIBRATION_FACTOR = 1  # To be determined during calibration
-
-
-def setup():
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(TARE_BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
-    hx.reset()
-    hx.tare()  # Tare the scale
-
-    oled.fill(0)
-    oled.show()
-
-
+# Calibration function
 def calibrate():
     print("Place a known weight on the scale.")
-    input("Press Enter when ready...")
-    raw_val = hx.get_raw_data_mean(10)
-    known_weight = float(input("Enter the weight (grams): "))
-    calibration_factor = raw_val / known_weight
-    print(f"Calibration Factor: {calibration_factor}")
-    return calibration_factor
+    print("After placing the weight, press Enter to start calibration.")
+    input("Press Enter to continue...")
 
+    # Take several measurements and find the mean
+    measurements = []
+    for i in range(10):
+        weight = hx711.get_weight_mean(10)
+        measurements.append(weight)
+        time.sleep(0.1)
 
-def tare(channel):
-    global tare_offset
-    tare_offset = hx.get_raw_data_mean(10)
-    print("Tared!")
-    display_message("Tared!")
+    # Compute the mean weight
+    mean_weight = sum(measurements) / len(measurements)
+    print(f"Mean reading with no weight: {mean_weight}")
+    
+    print("Now, enter the known weight in grams that you have placed on the scale.")
+    known_weight = float(input("Enter known weight (grams): "))
+    
+    # Calculate the scale factor (calibration factor)
+    calibration_factor = known_weight / mean_weight
+    print(f"Calibration factor: {calibration_factor}")
+    
+    # Set the calibration factor
+    hx711.set_scale(calibration_factor)
 
+    print("Calibration complete.")
 
-def display_message(message):
-    oled.fill(0)
-    oled.text(message, 0, 0, 1)
-    oled.show()
-
-
-def main():
-    global tare_offset
-    try:
-        setup()
-        GPIO.add_event_detect(TARE_BUTTON_PIN, GPIO.FALLING, callback=tare, bouncetime=300)
-
-        while True:
-            raw_data = hx.get_raw_data_mean(10)
-            if raw_data is not None:
-                weight = (raw_data - tare_offset) / CALIBRATION_FACTOR
-                display_message(f"Weight: {weight:.2f} g")
-            else:
-                display_message("Error reading!")
-            time.sleep(0.5)
-
-    except KeyboardInterrupt:
-        print("Exiting...")
-    finally:
-        GPIO.cleanup()
-        oled.fill(0)
-        oled.show()
-
-
+# Main program
 if __name__ == "__main__":
-    CALIBRATION_FACTOR = calibrate()
-    main()
+    # Calibrate the scale
+    calibrate()
+    
+    # Continuously print weight readings
+    while True:
+        weight = read_weight()
+        print(f"Weight: {weight:.2f} grams")
+        time.sleep(1)
 
