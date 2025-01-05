@@ -38,8 +38,8 @@ In my case, the longValueWithOffset was around 114000 so my reference unit is 11
 because if I used the 114000, I'd be getting milligrams instead of grams.
 '''
 
-referenceUnit = 114
-# hx.set_reference_unit(referenceUnit)
+hx.setReferenceUnit(-230)
+hx.setOffset(211427);
 
 hx.reset()
 
@@ -62,7 +62,7 @@ while True:
         # print binary_string + " " + np_arr8_string
         
         # Prints the weight. Comment if you're debbuging the MSB and LSB issue.
-        val = hx.get_weight(5)
+        val = hx.get_weight(10)
         print(val)
 
         # To get weight from both channels (if you have load cells hooked up 
