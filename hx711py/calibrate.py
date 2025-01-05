@@ -65,7 +65,7 @@ try:
         weight_grams_int = int(weight_grams)
 
         print(f"Weight: {weight_grams_int}")
-            time.sleep(1)
+        time.sleep(1)
 
     except KeyboardInterrupt:
         GPIO.cleanup()  # Clean up GPIO when the program is stopped
