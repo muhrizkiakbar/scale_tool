@@ -7,6 +7,7 @@ DT_PIN = 5
 SCK_PIN = 6
 
 # Setup GPIO
+GPIO.setmode(GPIO.BCM)
 hx711 = HX711(DT_PIN, SCK_PIN)
 
 # Function to read the raw data from the HX711
