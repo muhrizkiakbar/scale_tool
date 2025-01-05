@@ -10,7 +10,7 @@ from hx711 import HX711  # Import your HX711 class
 # lcd = I2cLcd(i2c, 0x27, 2, 16)  # Adjust the I2C address and dimensions
 
 # Set up HX711
-hx711 = HX711(clock=Pin(18), data=Pin(19), gain=128)  # Adjust pins for HX711
+hx711 = HX711(clock=Pin(5), data=Pin(6), gain=128)  # Adjust pins for HX711
 
 # Tare the scale initially
 hx711.tare()
