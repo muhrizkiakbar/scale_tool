@@ -2,6 +2,8 @@ import time
 import RPi.GPIO as GPIO
 from hx711 import HX711  # Import your HX711 class
 
+GPIO.setmode(GPIO.BCM)
+GPIO.cleanup()
 GPIO.setmode(GPIO.BCM)  # Use BCM numbering
 zero_button = 17  # Change GPIO pin if needed
 GPIO.setup(zero_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Set up as input with pull-up resistor
