@@ -2,8 +2,6 @@ import time
 import RPi.GPIO as GPIO
 from hx711 import HX711  # Import your HX711 class
 
-GPIO.setmode(GPIO.BCM)
-GPIO.cleanup()
 GPIO.setmode(GPIO.BCM)  # Use BCM numbering
 zero_button = 17  # Change GPIO pin if needed
 GPIO.setup(zero_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Set up as input with pull-up resistor
@@ -54,19 +52,25 @@ def is_button_pressed():
     return GPIO.input(zero_button) == GPIO.LOW  # Button pressed when value is LOW
 
 # Main loop
-while True:
-    if is_button_pressed():  # Check if the button is pressed
-        # lcd.clear()
-        # lcd.putstr("Zeroing scale...")
-        hx711.tare()  # Zero (tare) the scale
-        time.sleep(1)  # Give time for taring
-        # lcd.clear()
-    
-    weight_raw = hx711.get_value()
-    weight_grams = weight_raw / scale_factor
-    weight_grams_int = int(weight_grams)
+try:
+    while True:
+        if is_button_pressed():  # Check if the button is pressed
+            # lcd.clear()
+            # lcd.putstr("Zeroing scale...")
+            hx711.tare()  # Zero (tare) the scale
+            time.sleep(1)  # Give time for taring
+            # lcd.clear()
+        
+        weight_raw = hx711.get_value()
+        weight_grams = weight_raw / scale_factor
+        weight_grams_int = int(weight_grams)
 
-    print(f"Weight: {weight_grams_int}")
-    # lcd.clear()
-    # lcd.putstr(f"Weight: {weight_grams_int} g")
-    time.sleep(1)
+        print(f"Weight: {weight_grams_int}")
+        # lcd.clear()
+        # lcd.putstr(f"Weight: {weight_grams_int} g")
+        time.sleep(1)
+except KeyboardInterrupt:
+        pass # or print("received a keyboard interrupt, exiting.")
+finally:
+    GPIO.cleanup()
+
